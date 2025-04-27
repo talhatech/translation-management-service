@@ -8,6 +8,12 @@
         },
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "/api",
+            "description": "API Server"
+        }
+    ],
     "paths": {
         "/register": {
             "post": {
@@ -1665,8 +1671,10 @@
         "schemas": {
             "Language": {
                 "required": [
+                    "id",
                     "code",
-                    "name"
+                    "name",
+                    "is_active"
                 ],
                 "properties": {
                     "id": {
@@ -1688,17 +1696,20 @@
                     },
                     "created_at": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00.000000Z"
                     },
                     "updated_at": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00.000000Z"
                     }
                 },
                 "type": "object"
             },
             "Tag": {
                 "required": [
+                    "id",
                     "name"
                 ],
                 "properties": {
@@ -1713,17 +1724,20 @@
                     },
                     "created_at": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00.000000Z"
                     },
                     "updated_at": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00.000000Z"
                     }
                 },
                 "type": "object"
             },
             "Translation": {
                 "required": [
+                    "id",
                     "key",
                     "value",
                     "language_id"
@@ -1758,11 +1772,13 @@
                     },
                     "created_at": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00.000000Z"
                     },
                     "updated_at": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00.000000Z"
                     }
                 },
                 "type": "object"
@@ -1811,12 +1827,19 @@
                 },
                 "type": "object"
             }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "Token",
+                "scheme": "bearer"
+            }
         }
     },
     "tags": [
         {
             "name": "Authentication",
-            "description": "Authentication"
+            "description": "API Endpoints for user authentication"
         },
         {
             "name": "Languages",

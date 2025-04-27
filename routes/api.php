@@ -7,12 +7,7 @@ use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\TranslationController;
 
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
-
-
-
+// Public Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 

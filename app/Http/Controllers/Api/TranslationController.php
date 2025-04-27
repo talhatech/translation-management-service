@@ -3,22 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Translation\ExportTranslationRequest;
+use App\Http\Requests\Api\Translation\StoreTranslationRequest;
+use App\Http\Requests\Api\Translation\UpdateTranslationRequest;
+use App\Http\Resources\Api\TranslationResource;
 use App\Models\Translation;
 use App\Services\TranslationService;
 use Illuminate\Http\Request;
 
-
-
-/**
- * @OA\Info(
- *     title="Translation Management API",
- *     version="1.0.0",
- *     description="API for managing translations",
- *     @OA\Contact(
- *         email="admin@example.com"
- *     )
- * )
- */
 class TranslationController extends Controller
 {
     protected $translationService;
@@ -115,7 +107,7 @@ class TranslationController extends Controller
         $filters = $request->only(['key', 'value', 'language_id', 'language_code', 'tag', 'per_page']);
         $translations = $this->translationService->searchTranslations($filters);
 
-        return response()->json($translations);
+        return TranslationResource::collection($translations);
     }
 
     /**
@@ -170,25 +162,15 @@ class TranslationController extends Controller
      *     )
      * )
      */
-    public function store(Request $request)
+    public function store(StoreTranslationRequest $request)
     {
-
-        // todo: create validation separate files + add resources
-
-
-        $validated = $request->validate([
-            'key' => 'required|string|max:255',
-            'value' => 'required|string',
-            'language_id' => 'required|exists:languages,id',
-            'tags' => 'array',
-            'tags.*' => 'string|max:255',
-        ]);
-
+        $validated = $request->validated();
         $translation = $this->translationService->createTranslation($validated);
 
-        return response()->json($translation->load(['language', 'tags']), 201);
+        return  TranslationResource::make($translation->load(['language', 'tags']))
+            ->response()
+            ->setStatusCode(201);
     }
-
 
     /**
      * @OA\Get(
@@ -227,9 +209,8 @@ class TranslationController extends Controller
      */
     public function show(Translation $translation)
     {
-        return response()->json($translation->load(['language', 'tags']));
+        return TranslationResource::make($translation->load(['language', 'tags']));
     }
-
 
     /**
      * @OA\Put(
@@ -296,24 +277,13 @@ class TranslationController extends Controller
      *     )
      * )
      */
-    public function update(Request $request, Translation $translation)
+    public function update(UpdateTranslationRequest $request, Translation $translation)
     {
-        // todo: create validation separate files + add resources
-
-
-        $validated = $request->validate([
-            'key' => 'string|max:255',
-            'value' => 'string',
-            'language_id' => 'exists:languages,id',
-            'tags' => 'array',
-            'tags.*' => 'string|max:255',
-        ]);
-
+        $validated = $request->validated();
         $translation = $this->translationService->updateTranslation($translation, $validated);
 
-        return response()->json($translation->load(['language', 'tags']));
+        return TranslationResource::make($translation->load(['language', 'tags']));
     }
-
 
     /**
      * @OA\Delete(
@@ -355,7 +325,6 @@ class TranslationController extends Controller
 
         return response()->json(null, 204);
     }
-
 
     /**
      * @OA\Get(
@@ -418,20 +387,12 @@ class TranslationController extends Controller
      *     )
      * )
      */
-    public function export(Request $request)
+    public function export(ExportTranslationRequest $request)
     {
-
-        // todo: create validation separate files + add resources
-
-        $request->validate([
-            'language' => 'required|string|exists:languages,code',
-            'tags' => 'array',
-            'tags.*' => 'string',
-        ]);
-
+        $validated = $request->validated();
         $translations = $this->translationService->getTranslationsForLanguage(
-            $request->language,
-            $request->tags ?? []
+            $validated['language'],
+            $validated['tags'] ?? []
         );
 
         return response()->json($translations);

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Language\StoreLanguageRequest;
+use App\Http\Requests\Api\Language\UpdateLanguageRequest;
+use App\Http\Resources\Api\LanguageResource;
 use App\Interfaces\TranslationServiceInterface;
 use App\Models\Language;
-use Illuminate\Http\Request;
-
 
 class LanguageController extends Controller
 {
@@ -44,9 +45,8 @@ class LanguageController extends Controller
     public function index()
     {
         $languages = $this->translationService->getAllLanguages();
-        return response()->json($languages);
+        return LanguageResource::collection($languages);
     }
-
 
     /**
      * @OA\Post(
@@ -94,21 +94,15 @@ class LanguageController extends Controller
      *     )
      * )
      */
-    public function store(Request $request)
+    public function store(StoreLanguageRequest $request)
     {
-        // todo: create validation separate files + add resources
-
-        $validated = $request->validate([
-            'code' => 'required|string|max:10|unique:languages,code',
-            'name' => 'required|string|max:255',
-            'is_active' => 'boolean',
-        ]);
-
+        $validated = $request->validated();
         $language = Language::create($validated);
 
-        return response()->json($language, 201);
+        return LanguageResource::make($language)
+            ->response()
+            ->setStatusCode(201);
     }
-
 
     /**
      * @OA\Get(
@@ -147,9 +141,8 @@ class LanguageController extends Controller
      */
     public function show(Language $language)
     {
-        return response()->json($language);
+        return LanguageResource::make($language);
     }
-
 
     /**
      * @OA\Put(
@@ -210,21 +203,13 @@ class LanguageController extends Controller
      *     )
      * )
      */
-    public function update(Request $request, Language $language)
+    public function update(UpdateLanguageRequest $request, Language $language)
     {
-        // todo: create validation separate files + add resources
-
-        $validated = $request->validate([
-            'code' => 'string|max:10|unique:languages,code,' . $language->id,
-            'name' => 'string|max:255',
-            'is_active' => 'boolean',
-        ]);
-
+        $validated = $request->validated();
         $language->update($validated);
 
-        return response()->json($language);
+        return LanguageResource::make($language);
     }
-
 
     /**
      * @OA\Delete(
