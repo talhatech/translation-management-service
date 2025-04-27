@@ -8,7 +8,6 @@ A scalable, high-performance API for managing translations across multiple langu
 - Tagging system for organizing translations by context (mobile, web, desktop, etc.)
 - High-performance API with response times under 200ms
 - JSON export endpoint for frontend applications
-- CDN support for serving translation files
 - Token-based authentication for API security
 - Command-line tool for populating the database with test data
 - Comprehensive test suite with unit and feature tests
@@ -17,7 +16,7 @@ A scalable, high-performance API for managing translations across multiple langu
 ## Tech Stack
 
 - PHP 8.2
-- Laravel 10
+- Laravel 1
 - MySQL 8.0
 - Redis for caching
 - Laravel Sail (Docker-based development environment)
@@ -28,7 +27,7 @@ A scalable, high-performance API for managing translations across multiple langu
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/translation-management-service.git
+git clone https://github.com/talhatech/translation-management-service.git
 cd translation-management-service
 ```
 
@@ -72,7 +71,7 @@ php artisan sail:install
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/translation-management-service.git
+git clone https://github.com/talhatech/translation-management-service.git
 cd translation-management-service
 ```
 
@@ -156,7 +155,6 @@ http://localhost/api/documentation
 - `PUT /api/translations/{id}` - Update a translation
 - `DELETE /api/translations/{id}` - Delete a translation
 - `GET /api/export` - Export translations as JSON for frontend use
-- `GET /api/export-cdn` - Export translations to CDN and get URL
 
 ## Design Decisions
 
@@ -175,7 +173,6 @@ The database schema is designed to be scalable and efficient:
 - **Caching**: Redis caching for language lists and translation exports
 - **Pagination**: All list endpoints support pagination to handle large datasets
 - **Query Optimization**: Carefully crafted queries to minimize database load
-- **CDN Support**: Option to export translations to CDN for faster delivery
 
 ### SOLID Principles
 
