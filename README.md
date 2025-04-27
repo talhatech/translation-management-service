@@ -16,7 +16,7 @@ A scalable, high-performance API for managing translations across multiple langu
 ## Tech Stack
 
 - PHP 8.2
-- Laravel 1
+- Laravel 12
 - MySQL 8.0
 - Redis for caching
 - Laravel Sail (Docker-based development environment)
